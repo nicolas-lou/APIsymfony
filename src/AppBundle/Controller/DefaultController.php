@@ -81,6 +81,37 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/updateuser/{id}", name="updateuser", requirements={"id"="\d+"}, methods={"PUT"})
+     *
+     */
+    public function updateUserAction($id, Request $request)
+    {
+        $data = json_decode($request->getContent(),true);
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $user->setName($data['name']);
+        $user->setFirstName($data['firstname']);
+        $user->setAge($data['age']);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+
+        return new Response('update ok');
+    }
+
+    /**
+     * @Route("/deleteuser/{id}", name="deleteuser", requirements={"id"="\d+"}, methods={"DELETE"})
+     *
+     */
+    public function deleteUserAction($id)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return new Response('remove ok');
+    }
+
+    /**
      * @Route("/addUser", name="addUser", methods={"POST"})
      *
      */
@@ -133,6 +164,36 @@ class DefaultController extends Controller
         return new Response('ok');
 
 
+    }
+
+    /**
+     * @Route("/deletebeer/{id}", name="deletebeer", requirements={"id"="\d+"}, methods={"DELETE"})
+     *
+     */
+    public function deleteBeerAction($id)
+    {
+        $beer = $this->getDoctrine()->getRepository(Beer::class)->find($id);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($beer);
+        $entityManager->flush();
+
+        return new Response('remove ok');
+    }
+
+    /**
+     * @Route("/updatebeer/{id}", name="updatebeer", requirements={"id"="\d+"}, methods={"PUT"})
+     *
+     */
+    public function updateBeerAction($id, Request $request)
+    {
+        $data = json_decode($request->getContent(),true);
+        $beer = $this->getDoctrine()->getRepository(Beer::class)->find($id);
+        $beer->setName($data['name']);
+        $beer->setPrice($data['price']);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+
+        return new Response('update ok');
     }
 
 }
