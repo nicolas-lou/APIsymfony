@@ -188,8 +188,13 @@ class DefaultController extends Controller
     {
         $data = json_decode($request->getContent(),true);
         $beer = $this->getDoctrine()->getRepository(Beer::class)->find($id);
-        $beer->setName($data['name']);
-        $beer->setPrice($data['price']);
+        if(isset($data['name'])){
+            $beer->setName($data['name']);
+        }
+        if(isset($data['price'])){
+            $beer->setPrice($data['price']);
+        }
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
