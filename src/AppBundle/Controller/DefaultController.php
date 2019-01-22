@@ -88,9 +88,17 @@ class DefaultController extends Controller
     {
         $data = json_decode($request->getContent(),true);
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-        $user->setName($data['name']);
-        $user->setFirstName($data['firstname']);
-        $user->setAge($data['age']);
+        if(isset($data['name'])){
+            $user->setName($data['name']);
+        }
+        if(isset($data['firstname'])){
+            $user->setFirstName($data['firstname']);
+        }
+        if(isset($data['age'])){
+            $user->setAge($data['age']);
+        }
+
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
