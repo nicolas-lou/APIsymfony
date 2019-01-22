@@ -63,22 +63,57 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/getuser/{id}", name="getuser", requirements={"id"="\d+"}, methods={"GET"})
+     *
+     */
+    public function getUserAction($id)
+    {
+        $users = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+        $userOk=[
+            'id'=>$users->getId(),
+            'name'=>$users->getName(),
+            'firstname'=>$users->getFirstname(),
+            'age'=>$users->getAge()
+        ];
+
+        return new JsonResponse($userOk);
+    }
+
+    /**
      * @Route("/addUser", name="addUser", methods={"POST"})
      *
      */
     public function addUserAction(Request $request)
     {
-
+        $data = json_decode($request->getContent(),true);
         $entityManager = $this->getDoctrine()->getManager();
         $user = new User();
-        $user->setName($request->get('name'));
-        $user->setFirstname($request->get('firstname'));
-        $user->setAge($request->get('age'));
+        $user->setName($data['name']);
+        $user->setFirstname($data['firstname']);
+        $user->setAge($data['age']);
         $entityManager->persist($user);
         $entityManager->flush();
-        return new Response("ok");
+        return new Response('ok');
 
 
+    }
+
+    /**
+     * @Route("/getbeer/{id}", name="getbeer", requirements={"id"="\d+"}, methods={"GET"})
+     *
+     */
+    public function getBeerAction($id)
+    {
+        $beer = $this->getDoctrine()->getRepository(Beer::class)->find($id);
+
+        $beerOk=[
+            'id'=>$beer->getId(),
+            'name'=>$beer->getName(),
+            'price'=>$beer->getPrice()
+        ];
+
+        return new JsonResponse($beerOk);
     }
 
     /**
@@ -88,13 +123,14 @@ class DefaultController extends Controller
     public function addBeerAction(Request $request)
     {
 
+        $data = json_decode($request->getContent(),true);
         $entityManager = $this->getDoctrine()->getManager();
         $beer = new Beer();
-        $beer->setName($request->get('name'));
-        $beer->setPrice($request->get('price'));
+        $beer->setName($data['name']);
+        $beer->setPrice($data['price']);
         $entityManager->persist($beer);
         $entityManager->flush();
-        return new Response("ok");
+        return new Response('ok');
 
 
     }
